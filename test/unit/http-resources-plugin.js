@@ -5,7 +5,7 @@
  * Copying and unauthorised use of this material strictly prohibited.
  */
 
-const httpConnectionsPlugin = require('../../lib/http-connections-plugin');
+const httpResourcesPlugin = require('../../lib/http-resources-plugin');
 const nock = require('nock');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -14,7 +14,7 @@ const logger = require('../../lib/logger');
 chai.use(chaiAsPromised)
 const { assert } = chai;
 
-describe('Http connections plugin', () => {
+describe('Http resources plugin', () => {
   const url = 'http://localhost/test';
 
   beforeEach(() => {
@@ -26,8 +26,8 @@ describe('Http connections plugin', () => {
   })
 
   it('should return a json response', async () => {
-    httpConnectionsPlugin.setup({
-      connectionsUrl: url
+    httpResourcesPlugin.setup({
+      resourcesUrl: url
     })
 
     const response = {
@@ -45,26 +45,26 @@ describe('Http connections plugin', () => {
       .get('')
       .reply(200, response);
 
-    const connections = await httpConnectionsPlugin.fetchConnections();
+    const resources = await httpResourcesPlugin.fetchResources();
 
-    assert.deepEqual(connections, response.data);
+    assert.deepEqual(resources, response.data);
   })
 
   it('should throw an error if the response status code is greater than 299', async () => {
-    httpConnectionsPlugin.setup({
-      connectionsUrl: url
+    httpResourcesPlugin.setup({
+      resourcesUrl: url
     })
 
     nock(url)
     .get('')
     .reply(400);
 
-    return assert.isRejected(httpConnectionsPlugin.fetchConnections(url));
+    return assert.isRejected(httpResourcesPlugin.fetchResources(url));
   })
 
   it('should use the node fetch options if provided', async () => {
-    httpConnectionsPlugin.setup({
-      connectionsUrl: url,
+    httpResourcesPlugin.setup({
+      resourcesUrl: url,
       nodeFetchOptions: {
         method: 'PUT'
       }
@@ -85,8 +85,8 @@ describe('Http connections plugin', () => {
     .put('')
     .reply(200, response);
 
-    const connections = await httpConnectionsPlugin.fetchConnections();
+    const resources = await httpResourcesPlugin.fetchResources();
 
-    assert.deepEqual(connections, response.data);
+    assert.deepEqual(resources, response.data);
   })
 })

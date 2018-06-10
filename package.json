@@ -1,13 +1,11 @@
 {
-  "name": "@evrythng/connection-manager",
+  "name": "@evrythng/distributed-resource-manager",
   "version": "0.0.1",
   "description": "",
   "main": "lib/server.js",
   "scripts": {
-    "start": "node lib/connection-manager.js",
+    "start": "node lib/resource-manager.js",
     "eslint": "eslint --ext .js .",
-    "pretest": "./test/setup.sh",
-    "posttest": "./test/teardown.sh",
     "test": "npm run eslint && nyc node_modules/.bin/_mocha 'test/**/*.js'",
     "test:it": "nyc node_modules/.bin/_mocha 'test/it/**/*.js'",
     "test:unit": "nyc node_modules/.bin/_mocha 'test/unit/**/*.js'",
@@ -15,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evrythng/connection-manager.git"
+    "url": "git+https://github.com/evrythng/distributed-resource-manager.git"
   },
   "eslintConfig": {
     "extends": "@evrythng/eslint-config-evrythng"
@@ -40,10 +38,12 @@
   "dependencies": {
     "@evrythng/thng-node-config": "^2.0.0",
     "@evrythng/thng-node-core": "^6.0.1",
-    "async": "^2.6.0",
     "bunyan": "^1.8.12",
-    "newrelic": "^3.2.0",
-    "node-fetch": "^2.1.2"
+    "joi": "^13.3.0",
+    "node-fetch": "^2.1.2",
+    "retry": "^0.12.0",
+    "ringpop": "^10.20.0",
+    "tchannel": "^3.9.12"
   },
   "devDependencies": {
     "@evrythng/eslint-config-evrythng": "0.0.1",
@@ -57,7 +57,6 @@
     "mocha": "^5.0.4",
     "nock": "^9.2.5",
     "nyc": "^11.6.0",
-    "rewire": "^3.0.2",
     "sinon": "^4.4.6",
     "supertest": "^3.0.0",
     "ws": "^5.1.1"
