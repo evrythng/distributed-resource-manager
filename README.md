@@ -7,7 +7,7 @@ This library abstracts away the problem of the allocation and distribution of th
 At [EVRYTHNG](http://evrythng.com/) we use a version of this library for the following:
 
 * Maintaining permanent websocket connections to third party clouds. The users of the customers of the EVRYTHNG platform can have their data synchronised with other clouds. When this happens we set up a websocket connection to the other cloud and the distributed resource manager library takes care of keeping that websocket connection alive in case of node failure or some other error.
-* Allocating webhook resources to a particular node. In the EVRYTHNG platform internal components can subscribe to events in the platform by specifying a url. This url is then called when the event occurs. The distributed resource manager handled the allocation of these webhooks to specific nodes which ensures a url is only ever called once for a single event.
+* Allocating webhook resources to a particular node. In the EVRYTHNG platform internal components can subscribe to events in the platform by specifying a url. This url is then called when the event occurs. The distributed resource manager handles the allocation of these webhooks to specific nodes which ensures a url is only ever called once for a single event.
 
 The library depends on [ringpop](https://github.com/uber-node/ringpop-node) to shard resources amongst a set of nodes and to forward new resources to the appropriate node.  
 
@@ -87,10 +87,10 @@ See [here](examples) for a more detailed example.
 
 ## API
 
-* [`distributedResourceManager()`](#distributedResourceManager())
-* [`instance.allocateResource(resource)`](#instance.allocateResource(resource))
-* [`instance.deallocateResource(resource)`](#instance.deallocateResource(resource))
-* [`instance.stop()`](#instance.stop())
+* [`distributedResourceManager()`](#distributedresourcemanagerconfig)
+* [`instance.allocateResource(resource)`](#instanceallocateresourceresource)
+* [`instance.deallocateResource(resource)`](#instancedeallocateresourceresource)
+* [`instance.stop()`](#stop())
 
 ### `distributedResourceManager(config)`
 
@@ -109,8 +109,8 @@ Config options:
 * `fetchResourcesHttpOptions.pollForNewResources`: Whether the resource manager should poll `fetchResourcesHttpOptions.resourcesUrl` for new resources (boolean - default = `false`)
 * `fetchResourcesHttpOptions.howOftenToPoll`: How often the resource manager should poll for new resources in milliseconds (integer - default = `60000`)
 * `cacheAllResources`: If this is `true` then all resources will be stored in memory when first fetched. This means if the resources are rebalanced amongst the hash ring the resource manager will not re-fetch the resources (boolean - default = `false`)
-* `resourceHandler`: Methods for handling new resource allocation and termination. This is [described more below](#resourceHandler) (object - **required**)
-* `resourcesRetrieverPlugin`: A plugin for retrieving resources. This is [described more below](#Plugins) (object)
+* `resourceHandler`: Methods for handling new resource allocation and termination. This is [described more below](#resourcehandler) (object - **required**)
+* `resourcesRetrieverPlugin`: A plugin for retrieving resources. This is [described more below](#plugins) (object)
 * `resourcesRetrieverConfig`: Configuration for the `resourcesRetrieverPlugin` (object)
 * `maxLengthOfTimeToRetryResourceFetching`: During resource balancing the maximum length of time in milliseconds the resource manager will attempt to retry fetching resources if it keeps getting errors. If by this time the resource manager has been unable to fetch the resources then it will exit (integer - default = `60000`)
 
@@ -159,13 +159,13 @@ Every method must be implemented although `handleFailedResource` and `handleFail
 
 This will be called when a new resource has been allocated to the hashring. It can return a Promise. 
 
-It is here where the logic for handling a resource should be defined such as setting up a websocket connection or polling an http endpoint. For example, [in this test script](examples/test.js) when `handleResource` is called it will set up a connection to a websocket server.
+It is here where the logic for handling a resource should be defined such as setting up a websocket connection or polling an http endpoint. For example, [in this test script](examples/test.js#L89) when `handleResource` is called it will set up a connection to a websocket server.
 
 ### `handleFailedResource(resource)`
 
 This will be called when there was an error calling `handleResource()`. Depending on your use case it might not be important to put any logic here.
 
-If the resource needs to be handled again the [`instance.allocateResource(resource)`](#instance.allocateResource(resource)) method can be used.
+If the resource needs to be handled again the [`instance.allocateResource(resource)`](#instanceallocateresourceresource) method can be used.
 
 ### `terminateResource(resource)`
 
@@ -177,7 +177,7 @@ It is here where the logic for tearing down a resource should be defined such as
 
 This will be called when there was an error calling `terminateResource()`. Depending on your use case it might not be important to put any logic here.
 
-Please note that if the manager failed to terminate the resource it will still remove it from its hashring so it will not be allocated to any node. If you need to ensure the resource has been terminated the [`instance.deallocateResource(resource)`](#instance.deallocateResource(resource)) method can be used.
+Please note that if the manager failed to terminate the resource it will still remove it from its hashring so it will not be allocated to any node. If you need to ensure the resource has been terminated the [`instance.deallocateResource(resource)`](#instancedeallocateresourceresource) method can be used.
 
 ## The default http plugin
 
@@ -192,7 +192,6 @@ By default the distributed resource manager will fetch resources from the http e
     {
       "id": "2"
     }
-    ...
   ]
 }
 ```
@@ -215,7 +214,7 @@ ResourcesRetrieverPlugin {
 
 Every method must be implemented. See the [http plugin](lib/http-resources-plugin.js) for a reference implementation.
 
-### setup(resourcesRetrieverConfig, resourceManagerApi)
+### `setup(resourcesRetrieverConfig, resourceManagerApi)`
 
 This is called to setup your plugin and expects a Promise to be returned. For example, you may want to create a database connection here or start polling a queue. `setup` is called with the following arguments:
 
