@@ -1,3 +1,6 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+/* eslint require-jsdoc: 0 */
+
 const resourceManager = require('../lib/resource-manager');
 const WebSocket = require('ws');
 const bunyan = require('bunyan');
@@ -46,7 +49,7 @@ resourceManager({
   },
   resourceHandler,
   cacheAllResources: true,
-}).then(({ stop }) => {
+}).then(() => {
   console.log('resource manager started');
 }).catch((err) => {
   console.error(err);

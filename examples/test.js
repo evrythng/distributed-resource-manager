@@ -1,3 +1,5 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+/* eslint require-jsdoc: 0 */
 
 const resourceManager = require('../lib/resource-manager');
 const express = require('express');
@@ -54,7 +56,7 @@ app.get('/resources', (req, res) => res.json({
 }));
 
 function start() {
-  const serverReady = () => new Promise((resolve, reject) => {
+  const serverReady = () => new Promise((resolve) => {
     app.listen(3000, () => {
       console.log('Example app listening on port 3000!');
       resolve();
@@ -117,48 +119,8 @@ start().then(() => {
     },
     resourceHandler,
   });
-}).then(({ allocateResource, deallocateResource, stop }) => {
+}).then(() => {
   console.log('resource manager started');
-
-  const id = 7;
-
-  setTimeout(() => {
-    resources.push({
-      id: '7',
-      ws: 'ws://localhost:8080',
-    });
-  }, 7000);
-
-  // setTimeout(async () => {
-  //   allocateResource({
-  //     id: id.toString(),
-  //     ws: 'ws://localhost:8080'
-  //   })
-  //
-  //   id += 1;
-  // }, 5000)
-  //
-  // setTimeout(async () => {
-  //   deallocateResource({
-  //     id: '4',
-  //     ws: 'ws://localhost:8080'
-  //   })
-  //
-  //   id += 1;
-  // }, 10000)
-  //
-  // setTimeout(async () => {
-  //   stop()
-  //   // wss.close()
-  //   // app.close()
-  // }, 15000)
-
-  // setTimeout(() => {
-  //   allocateConnection({
-  //     id: '8',
-  //     ws: 'ws://localhost:8080'
-  //   })
-  // }, 10000)
 }).catch((err) => {
   console.log('There was an error');
   console.error(err);

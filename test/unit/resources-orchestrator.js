@@ -228,12 +228,11 @@ describe('Resources orchestrator', () => {
     ringpopInstance.lookup.onCall(3).returns(false);
 
     const handleResourceSpy = sinon.spy();
-    const terminateResourceSpy = sinon.spy();
 
     const resourceHandlerDefinition = {
       handleResource: handleResourceSpy,
       handleFailedResource: sinon.spy(),
-      terminateResource: terminateResourceSpy,
+      terminateResource: () => {},
     };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
@@ -266,13 +265,11 @@ describe('Resources orchestrator', () => {
     ringpopInstance.lookup.onCall(7).returns(true);
 
     handleResourceSpy.resetHistory();
-    terminateResourceSpy.resetHistory();
 
     await resourcesOrchestrator.rebalanceResources(ringpopInstance);
 
     const resourcesForThisHashRing = resourcesOrchestrator.getResourcesHandledByThisHashring();
 
-    assert.ok(httpResourcePlugin.fetchResources.calledOnce);
     assert.ok(handleResourceSpy.calledWithExactly({ id: '4' }));
 
     assert.deepEqual(resourcesForThisHashRing, resources.slice(2));
