@@ -1,82 +1,77 @@
 
 const resourceManager = require('../lib/resource-manager');
-const express = require('express')
+const express = require('express');
 const WebSocket = require('ws');
-const app = express()
+
+const app = express();
 const bunyan = require('bunyan');
 
 const wss = new WebSocket.Server({ port: 8080 });
 
 let totalConnections = 0;
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', (ws) => {
   totalConnections += 1;
 
   console.log(`total connections: ${totalConnections}`);
 
   ws.on('close', () => {
-    totalConnections -= 1
+    totalConnections -= 1;
 
     console.log(`total connections: ${totalConnections}`);
-  })
+  });
 });
 
 const resources = [
   {
     id: '1',
-    ws: 'ws://localhost:8080'
+    ws: 'ws://localhost:8080',
   },
   {
     id: '2',
-    ws: 'ws://localhost:8080'
+    ws: 'ws://localhost:8080',
   },
   {
     id: '3',
-    ws: 'ws://localhost:8080'
+    ws: 'ws://localhost:8080',
   },
   {
     id: '4',
-    ws: 'ws://localhost:8080'
+    ws: 'ws://localhost:8080',
   },
   {
     id: '5',
-    ws: 'ws://localhost:8080'
+    ws: 'ws://localhost:8080',
   },
   {
     id: '6',
-    ws: 'ws://localhost:8080'
-  }
+    ws: 'ws://localhost:8080',
+  },
 ];
 
 app.get('/resources', (req, res) => res.json({
-  data: resources
-}))
+  data: resources,
+}));
 
 function start() {
-  const serverReady = () => {
-    return new Promise((resolve, reject) => {
-      app.listen(3000, () => {
-        console.log('Example app listening on port 3000!')
-        resolve()
-      })
-
-
-    })
-  }
-  const wssReady = () => {
-    return new Promise(resolve => {
-      wss.on('listening', () => {
-        console.log('web socket server listening')
-        resolve()
-      })
-    })
-  };
+  const serverReady = () => new Promise((resolve, reject) => {
+    app.listen(3000, () => {
+      console.log('Example app listening on port 3000!');
+      resolve();
+    });
+  });
+  const wssReady = () => new Promise((resolve) => {
+    wss.on('listening', () => {
+      console.log('web socket server listening');
+      resolve();
+    });
+  });
 
   return Promise.all([serverReady(), wssReady()]);
 }
 
 start().then(() => {
-  console.log('starting resource manager')
+  console.log('starting resource manager');
   const loggerSettings = {
     level: 'debug',
     name: 'app',
@@ -84,7 +79,7 @@ start().then(() => {
 
   const logger = bunyan.createLogger(loggerSettings);
 
-  const resourceConnections = {}
+  const resourceConnections = {};
   const resourceHandler = {
     handleResource(resource) {
       const ws = new WebSocket(resource.ws);
@@ -94,7 +89,7 @@ start().then(() => {
       console.log('handling resource');
     },
     handleFailedResource(err) {
-      console.error(err)
+      console.error(err);
     },
     terminateResource(resource) {
       resourceConnections[resource.id].close();
@@ -103,36 +98,36 @@ start().then(() => {
     },
     handleFailedTermination(err) {
       console.error(err);
-    }
-  }
+    },
+  };
 
   return resourceManager({
     ringpopOptions: {
       app: 'resource-manager-test',
       host: '127.0.0.1',
-      port: 7777
+      port: 7777,
     },
     ringpopHosts: ['127.0.0.1:7777'],
     logger,
     loggerChildConfig: {
-      'resource-manager': '1'
+      'resource-manager': '1',
     },
     fetchResourcesHttpOptions: {
-      resourcesUrl: 'http://localhost:3000/resources'
+      resourcesUrl: 'http://localhost:3000/resources',
     },
-    resourceHandler
-  })
-}).then(({allocateResource, deallocateResource, stop}) => {
+    resourceHandler,
+  });
+}).then(({ allocateResource, deallocateResource, stop }) => {
   console.log('resource manager started');
 
-  let id = 7;
+  const id = 7;
 
   setTimeout(() => {
     resources.push({
       id: '7',
-      ws: 'ws://localhost:8080'
-    })
-  }, 7000)
+      ws: 'ws://localhost:8080',
+    });
+  }, 7000);
 
   // setTimeout(async () => {
   //   allocateResource({
@@ -164,7 +159,7 @@ start().then(() => {
   //     ws: 'ws://localhost:8080'
   //   })
   // }, 10000)
-}).catch(err => {
-  console.log('There was an error')
-  console.error(err)
-})
+}).catch((err) => {
+  console.log('There was an error');
+  console.error(err);
+});

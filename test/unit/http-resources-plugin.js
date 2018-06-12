@@ -11,7 +11,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const logger = require('../../lib/logger');
 
-chai.use(chaiAsPromised)
+chai.use(chaiAsPromised);
 const { assert } = chai;
 
 describe('Http resources plugin', () => {
@@ -19,26 +19,26 @@ describe('Http resources plugin', () => {
 
   beforeEach(() => {
     logger.setupLogger();
-  })
+  });
 
   afterEach(() => {
     nock.cleanAll();
-  })
+  });
 
   it('should return a json response', async () => {
     httpResourcesPlugin.setup({
-      resourcesUrl: url
-    })
+      resourcesUrl: url,
+    });
 
     const response = {
       data: [
         {
-          id: 1
+          id: 1,
         },
         {
-          id: 2
-        }
-      ]
+          id: 2,
+        },
+      ],
     };
 
     nock(url)
@@ -48,45 +48,45 @@ describe('Http resources plugin', () => {
     const resources = await httpResourcesPlugin.fetchResources();
 
     assert.deepEqual(resources, response.data);
-  })
+  });
 
   it('should throw an error if the response status code is greater than 299', async () => {
     httpResourcesPlugin.setup({
-      resourcesUrl: url
-    })
+      resourcesUrl: url,
+    });
 
     nock(url)
-    .get('')
-    .reply(400);
+      .get('')
+      .reply(400);
 
     return assert.isRejected(httpResourcesPlugin.fetchResources(url));
-  })
+  });
 
   it('should use the node fetch options if provided', async () => {
     httpResourcesPlugin.setup({
       resourcesUrl: url,
       nodeFetchOptions: {
-        method: 'PUT'
-      }
-    })
+        method: 'PUT',
+      },
+    });
 
     const response = {
       data: [
         {
-          id: 1
+          id: 1,
         },
         {
-          id: 2
-        }
-      ]
+          id: 2,
+        },
+      ],
     };
 
     nock(url)
-    .put('')
-    .reply(200, response);
+      .put('')
+      .reply(200, response);
 
     const resources = await httpResourcesPlugin.fetchResources();
 
     assert.deepEqual(resources, response.data);
-  })
-})
+  });
+});

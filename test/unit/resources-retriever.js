@@ -17,27 +17,27 @@ describe('Resources retriever', () => {
     sandbox.stub(httpResourcesPlugin, 'fetchResources');
 
     httpResourcesPlugin.fetchResources.resolves();
-  })
+  });
 
   afterEach(() => {
     sandbox.restore();
-  })
+  });
 
   it('should setup the plugin for retrieving resources', async () => {
     await resourcesRetriever.setupResourcesRetriever(httpResourcesPlugin, {
-      resourcesUrl: 'http://test.com'
+      resourcesUrl: 'http://test.com',
     });
 
     assert.ok(resourcesRetriever.getResourcesRetriever() === httpResourcesPlugin);
-  })
+  });
 
   it('should delegate fetching resources to the plugin', async () => {
     await resourcesRetriever.setupResourcesRetriever(httpResourcesPlugin, {
-      resourcesUrl: 'http://test.com'
+      resourcesUrl: 'http://test.com',
     });
 
     await resourcesRetriever.fetchResources();
 
     assert.ok(httpResourcesPlugin.fetchResources.calledOnce);
-  })
-})
+  });
+});

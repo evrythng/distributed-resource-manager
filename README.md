@@ -90,7 +90,7 @@ See [here](examples) for a more detailed example.
 * [`distributedResourceManager()`](#distributedresourcemanagerconfig)
 * [`instance.allocateResource(resource)`](#instanceallocateresourceresource)
 * [`instance.deallocateResource(resource)`](#instancedeallocateresourceresource)
-* [`instance.stop()`](#stop())
+* [`instance.stop()`](#stop)
 
 ### `distributedResourceManager(config)`
 

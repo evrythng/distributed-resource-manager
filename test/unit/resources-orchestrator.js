@@ -28,11 +28,11 @@ describe('Resources orchestrator', () => {
     ringpopInstance.whoami.returns(true);
 
     resourcesOrchestrator.resetResourcesHandledByThisHashring();
-  })
+  });
 
   afterEach(() => {
     sandbox.restore();
-  })
+  });
 
   it('should call the provided resource handler for each resource allocated to this instance', async () => {
     ringpopInstance.lookup.onCall(0).returns(true);
@@ -43,21 +43,21 @@ describe('Resources orchestrator', () => {
 
     const resourceHandlerDefinition = {
       handleResource: spy,
-      handleFailedResource: sinon.spy()
-    }
+      handleFailedResource: sinon.spy(),
+    };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
     const resources = [
       {
-        id: '1'
+        id: '1',
       },
       {
-        id: '2'
+        id: '2',
       },
       {
-        id: '3'
-      }
-    ]
+        id: '3',
+      },
+    ];
 
     await resourcesOrchestrator.initialSetup(ringpopInstance, resources);
 
@@ -65,15 +65,15 @@ describe('Resources orchestrator', () => {
 
     assert.ok(spy.calledTwice);
     assert.deepEqual(resourcesForThisHashRing, resources.slice(0, 2));
-  })
+  });
 
   it('should call the "handleFailedResource" function if there is an error when handling the resource ', async () => {
     const stub = sinon.stub();
     const spy = sinon.spy();
     const resourceHandlerDefinition = {
       handleResource: stub,
-      handleFailedResource: spy
-    }
+      handleFailedResource: spy,
+    };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
 
@@ -85,15 +85,15 @@ describe('Resources orchestrator', () => {
 
     const resources = [
       {
-        id: '1'
+        id: '1',
       },
       {
-        id: '2'
+        id: '2',
       },
       {
-        id: '3'
-      }
-    ]
+        id: '3',
+      },
+    ];
 
     await resourcesOrchestrator.initialSetup(ringpopInstance, resources);
 
@@ -101,7 +101,7 @@ describe('Resources orchestrator', () => {
 
     assert.ok(spy.calledTwice);
     assert.deepEqual(resourcesForThisHashRing, resources.slice(0, 1));
-  })
+  });
 
   it('should rebalance the resources', async () => {
     ringpopInstance.lookup.onCall(0).returns(true);
@@ -115,28 +115,28 @@ describe('Resources orchestrator', () => {
     const resourceHandlerDefinition = {
       handleResource: handleResourceSpy,
       handleFailedResource: sinon.spy(),
-      terminateResource: terminateResourceSpy
-    }
+      terminateResource: terminateResourceSpy,
+    };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
     await resourcesRetriever.setupResourcesRetriever(httpResourcePlugin, {
-      resourcesUrl: 'http://test.com'
+      resourcesUrl: 'http://test.com',
     });
 
     const resources = [
       {
-        id: '1'
+        id: '1',
       },
       {
-        id: '2'
+        id: '2',
       },
       {
-        id: '3'
+        id: '3',
       },
       {
-        id: '4'
-      }
-    ]
+        id: '4',
+      },
+    ];
 
     httpResourcePlugin.fetchResources.resolves(resources);
 
@@ -151,7 +151,7 @@ describe('Resources orchestrator', () => {
     handleResourceSpy.resetHistory();
     terminateResourceSpy.resetHistory();
 
-    const newResources = resources.concat({id: '5'});
+    const newResources = resources.concat({ id: '5' });
 
     httpResourcePlugin.fetchResources.resolves(newResources);
 
@@ -159,12 +159,12 @@ describe('Resources orchestrator', () => {
 
     const resourcesForThisHashRing = resourcesOrchestrator.getResourcesHandledByThisHashring();
 
-    assert.ok(handleResourceSpy.calledWithExactly({id: '4'}));
-    assert.ok(handleResourceSpy.calledWithExactly({id: '5'}));
+    assert.ok(handleResourceSpy.calledWithExactly({ id: '4' }));
+    assert.ok(handleResourceSpy.calledWithExactly({ id: '5' }));
 
-    assert.ok(terminateResourceSpy.calledOnceWithExactly({id: '1'}));
+    assert.ok(terminateResourceSpy.calledOnceWithExactly({ id: '1' }));
     assert.deepEqual(resourcesForThisHashRing, newResources.slice(2));
-  })
+  });
 
   it('should call the "handleFailedTermination" handler if there was an error when terminating the resource', async () => {
     ringpopInstance.lookup.onCall(0).returns(true);
@@ -180,28 +180,28 @@ describe('Resources orchestrator', () => {
       handleResource: handleResourceSpy,
       handleFailedResource: sinon.spy(),
       terminateResource: terminateResourceStub,
-      handleFailedTermination: failedTerminationSpy
-    }
+      handleFailedTermination: failedTerminationSpy,
+    };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
     await resourcesRetriever.setupResourcesRetriever(httpResourcePlugin, {
-      resourcesUrl: 'http://test.com'
+      resourcesUrl: 'http://test.com',
     });
 
     const resources = [
       {
-        id: '1'
+        id: '1',
       },
       {
-        id: '2'
+        id: '2',
       },
       {
-        id: '3'
+        id: '3',
       },
       {
-        id: '4'
-      }
-    ]
+        id: '4',
+      },
+    ];
 
     httpResourcePlugin.fetchResources.resolves(resources);
 
@@ -219,7 +219,7 @@ describe('Resources orchestrator', () => {
     const resourcesForThisHashRing = resourcesOrchestrator.getResourcesHandledByThisHashring();
 
     assert.deepEqual(resourcesForThisHashRing, resources.slice(2));
-  })
+  });
 
   it('should rebalance the resources and use the cached resources if specified', async () => {
     ringpopInstance.lookup.onCall(0).returns(true);
@@ -233,28 +233,28 @@ describe('Resources orchestrator', () => {
     const resourceHandlerDefinition = {
       handleResource: handleResourceSpy,
       handleFailedResource: sinon.spy(),
-      terminateResource: terminateResourceSpy
-    }
+      terminateResource: terminateResourceSpy,
+    };
 
     resourceHandler.setupResourceHandler(resourceHandlerDefinition);
     await resourcesRetriever.setupResourcesRetriever(httpResourcePlugin, {
-      resourcesUrl: 'http://test.com'
+      resourcesUrl: 'http://test.com',
     });
 
     const resources = [
       {
-        id: '1'
+        id: '1',
       },
       {
-        id: '2'
+        id: '2',
       },
       {
-        id: '3'
+        id: '3',
       },
       {
-        id: '4'
-      }
-    ]
+        id: '4',
+      },
+    ];
 
     httpResourcePlugin.fetchResources.resolves(resources);
 
@@ -273,8 +273,8 @@ describe('Resources orchestrator', () => {
     const resourcesForThisHashRing = resourcesOrchestrator.getResourcesHandledByThisHashring();
 
     assert.ok(httpResourcePlugin.fetchResources.calledOnce);
-    assert.ok(handleResourceSpy.calledWithExactly({id: '4'}));
+    assert.ok(handleResourceSpy.calledWithExactly({ id: '4' }));
 
     assert.deepEqual(resourcesForThisHashRing, resources.slice(2));
-  })
-})
+  });
+});
