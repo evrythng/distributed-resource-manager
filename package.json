@@ -1,8 +1,9 @@
 {
-  "name": "@evrythng/distributed-resource-manager",
+  "name": "distributed-resource-manager",
   "version": "1.0.0",
+  "author": "EVRYTHNG",
   "description": "",
-  "main": "lib/server.js",
+  "main": "lib/resource-manager.js",
   "scripts": {
     "start": "node lib/resource-manager.js",
     "eslint": "eslint --ext .js .",
@@ -16,7 +17,41 @@
     "url": "git+https://github.com/evrythng/distributed-resource-manager.git"
   },
   "eslintConfig": {
-    "extends": "@evrythng/eslint-config-evrythng"
+    "env": {
+      "es6": true,
+      "mocha": true,
+      "node": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+      "no-underscore-dangle": 0,
+      "no-param-reassign": 0,
+      "object-curly-newline": 0,
+      "jsdoc/check-param-names": 2,
+      "jsdoc/check-tag-names": 2,
+      "jsdoc/check-types": 2,
+      "jsdoc/newline-after-description": 2,
+      "jsdoc/require-hyphen-before-param-description": 2,
+      "jsdoc/require-param": 2,
+      "jsdoc/require-param-name": 2,
+      "jsdoc/require-param-type": 2,
+      "jsdoc/require-returns-type": 2,
+      "require-jsdoc": [
+        "error",
+        {
+          "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": true,
+            "ClassDeclaration": false,
+            "ArrowFunctionExpression": true,
+            "FunctionExpression": true
+          }
+        }
+      ]
+    },
+    "plugins": [
+      "jsdoc"
+    ]
   },
   "nyc": {
     "exclude": [
@@ -36,8 +71,6 @@
     "npm": ">=5.6.0"
   },
   "dependencies": {
-    "@evrythng/thng-node-config": "^2.0.0",
-    "@evrythng/thng-node-core": "^6.0.1",
     "bunyan": "^1.8.12",
     "joi": "^13.3.0",
     "lodash": "^4.17.10",
@@ -47,7 +80,6 @@
     "tchannel": "^3.9.12"
   },
   "devDependencies": {
-    "@evrythng/eslint-config-evrythng": "0.0.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "eslint": "^4.18.2",
