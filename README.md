@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/evrythng/distributed-resource-manager.svg?branch=master)](https://travis-ci.org/evrythng/distributed-resource-manager)
+
 # distributed-resource-manager
 
 The distributed resource manager provides a way of managing a set of resources across multiple nodes. Resources could be websocket connections to other services, urls to be called when an event occurs or any set of things that must be handled in a distributed manner.
