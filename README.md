@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/evrythng/distributed-resource-manager.svg?branch=master)](https://travis-ci.org/evrythng/distributed-resource-manager)
+[![Coverage Status](https://coveralls.io/repos/github/evrythng/distributed-resource-manager/badge.svg?branch=master)](https://coveralls.io/github/evrythng/distributed-resource-manager?branch=master)
 
 # distributed-resource-manager
 
