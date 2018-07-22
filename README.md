@@ -6,6 +6,14 @@
 The distributed resource manager provides a way of managing a set of resources across multiple nodes. Resources could be websocket connections to other services, urls to be called when an event occurs or any set of things that must be handled in a distributed manner.
 
 This library abstracts away the problem of the allocation and distribution of these resources so users can focus on the core business logic of their application. They don’t need to worry about maintaining the resource in the cloud when new nodes are added to the system or if one of them goes down. 
+
+## When would you use it?
+
+The resource manager is useful when the following are true:
+
+1. You need to manage a set of resources that connect to a third-party service in some way e.g. websocket connection, http polling, redis pub/sub
+2. These resources need to be handled in a distributed system
+3. You need to ensure that if a node handling a resource goes down that it is then reallocated somewhere else
  
 At [EVRYTHNG](http://evrythng.com/) we use a version of this library for the following:
 
