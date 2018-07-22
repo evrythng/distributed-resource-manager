@@ -3,7 +3,7 @@
 
 # distributed-resource-manager
 
-The distributed resource manager provides a way of managing a set of resources across multiple nodes. Resources could be websocket connections to other services, urls to be called when an event occurs or any set of things that must be handled in a distributed manner.
+The distributed resource manager provides a way of managing a set of real-time resources across multiple nodes. Resources could be websocket connections to other services, urls to be called when an event occurs or any set of things that must be handled in a distributed manner.
 
 This library abstracts away the problem of the allocation and distribution of these resources so users can focus on the core business logic of their application. They don’t need to worry about maintaining the resource in the cloud when new nodes are added to the system or if one of them goes down. 
 
